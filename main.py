@@ -79,7 +79,7 @@ def find_tav(temp_pass, pool):
             POOL = POOL[pool_start_length:]
     
     #the loop ended and there is only one char in POOL
-    print(f'password part was found: {pass_checked + POOL}')
+    print(f'password part was found: {temp_pass + POOL}')
     return POOL
 
 
@@ -133,11 +133,11 @@ def find_pass_len(url, MAX_LEN):
 
 
 if __name__ == '__main__':
-    GAL_SITE = False
+    GAL_SITE = True
 
     if GAL_SITE:
         url = "https://agamhacks.herokuapp.com"
-        # POOL_SHORT = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        POOL = 'lsaodgerme'
 
     else:
         url = "https://passwordserver.herokuapp.com"# https://passwordserver.herokuapp.com
@@ -147,6 +147,6 @@ if __name__ == '__main__':
 
     pswd_len = 4
     final_pass = ""
-    for num in range(pswd_len):
+    for num in range(4):
         final_pass += find_tav(final_pass, POOL)
     print(final_pass)
